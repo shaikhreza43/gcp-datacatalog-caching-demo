@@ -77,7 +77,7 @@ public class DataCatalogServiceImpl implements DataCatalogService {
 
 	}
 
-	@Cacheable(key = "datacatalogentrygroup")
+	@Cacheable(value = "datacatalogentrygroup")
 	public static EntryGroup getEntryGroup(EntryGroupName entryGroupName) throws IOException {
 		// Initialize client that will be used to send requests. This client only needs
 		// to be created
@@ -92,7 +92,7 @@ public class DataCatalogServiceImpl implements DataCatalogService {
 		}
 	}
 
-	@Cacheable(key = "datacatalogentry")
+	@Cacheable(value = "datacatalogentry")
 	public static Entry getEntry(EntryName entryName) throws IOException {
 		// Initialize client that will be used to send requests. This client only needs
 		// to be created
