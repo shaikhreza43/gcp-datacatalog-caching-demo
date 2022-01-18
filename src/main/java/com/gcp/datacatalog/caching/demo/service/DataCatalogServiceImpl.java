@@ -4,14 +4,15 @@
 package com.gcp.datacatalog.caching.demo.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.gcp.datacatalog.caching.demo.common.Document;
-import com.gcp.datacatalog.caching.demo.utils.DataCatalogHelper;
 import com.google.cloud.datacatalog.v1.DataCatalogClient;
 import com.google.cloud.datacatalog.v1.DataCatalogClient.SearchCatalogPagedResponse;
 import com.google.cloud.datacatalog.v1.Entry;
@@ -19,6 +20,7 @@ import com.google.cloud.datacatalog.v1.EntryGroup;
 import com.google.cloud.datacatalog.v1.EntryGroupName;
 import com.google.cloud.datacatalog.v1.EntryName;
 import com.google.cloud.datacatalog.v1.SearchCatalogRequest;
+import com.google.cloud.datacatalog.v1.SearchCatalogResult;
 
 /**
  * @author Shaikh Ahmed Reza
@@ -42,6 +44,8 @@ public class DataCatalogServiceImpl implements DataCatalogService {
 
 //			EntryName entryName = EntryName.of(projectId,location,entryGroupId,entryId);
 //			Entry entry = getEntry(entryName);
+			
+			List<String> listOfEntries = new ArrayList<>();
 
 			DataCatalogClient client = DataCatalogClient.create();
 
@@ -49,11 +53,17 @@ public class DataCatalogServiceImpl implements DataCatalogService {
 					.addAllIncludeProjectIds(Arrays.asList("prj-ford-amp")).build();
 
 			SearchCatalogPagedResponse searchCatalogPagedResponse = client.searchCatalog(scope, entryGroupId);
+			
+			for (SearchCatalogResult searchCatalogResult: searchCatalogPagedResponse.iterateAll()) {
+				
+				String relativeResourceName = searchCatalogResult.getRelativeResourceName();
+				listOfEntries.add(relativeResourceName);
+			}
 
 //			EntryGroupName entryGroupName = EntryGroupName.of(projectId, location, entryGroupId);
 //			EntryGroup entryGroup = getEntryGroup(entryGroupName);
 
-			doc.setData(searchCatalogPagedResponse);
+			doc.setData(listOfEntries);
 			doc.setMessage("Entry Group retrieved successfully");
 			doc.setStatusCode(200);
 

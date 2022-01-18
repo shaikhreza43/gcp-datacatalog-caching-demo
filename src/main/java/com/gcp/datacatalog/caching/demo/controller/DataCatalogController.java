@@ -30,7 +30,7 @@ public class DataCatalogController {
 	}
 
 	@GetMapping("/fetch-dc-entries")
-	@Cacheable(key = "datacatalogentry")
+	@Cacheable(value = "datacatalogentry",cacheManager = "datacatalogCM")
 	public ResponseEntity<Document> getDataFromDataCatalog() {
 
 		Document response = dataCatalogService.getDataFromDataCatalog();
