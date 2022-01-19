@@ -36,6 +36,7 @@ public class DataCatalogServiceImpl implements DataCatalogService {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
+	@Cacheable(value = "datacatalogentryvalue")
 	public Document getDataFromDataCatalog() {
 
 		Document doc = new Document<>();
@@ -44,7 +45,7 @@ public class DataCatalogServiceImpl implements DataCatalogService {
 
 //			EntryName entryName = EntryName.of(projectId,location,entryGroupId,entryId);
 //			Entry entry = getEntry(entryName);
-			
+
 			List<String> listOfEntries = new ArrayList<>();
 
 			DataCatalogClient client = DataCatalogClient.create();
@@ -53,9 +54,9 @@ public class DataCatalogServiceImpl implements DataCatalogService {
 					.addAllIncludeProjectIds(Arrays.asList("prj-ford-amp")).build();
 
 			SearchCatalogPagedResponse searchCatalogPagedResponse = client.searchCatalog(scope, entryGroupId);
-			
-			for (SearchCatalogResult searchCatalogResult: searchCatalogPagedResponse.iterateAll()) {
-				
+
+			for (SearchCatalogResult searchCatalogResult : searchCatalogPagedResponse.iterateAll()) {
+
 				String relativeResourceName = searchCatalogResult.getRelativeResourceName();
 				listOfEntries.add(relativeResourceName);
 			}

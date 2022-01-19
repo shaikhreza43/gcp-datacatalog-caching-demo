@@ -6,6 +6,7 @@ package com.gcp.datacatalog.caching.demo.config;
 import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,11 +29,18 @@ public class RedisConfig {
 	@Autowired
 	private Environment env;
 
+	@Value("${spring.redis.host}")
+	String redisHostname;
+
+	@Value("${spring.redis.port}")
+	String redisPort;
+
 	@Bean
 	public LettuceConnectionFactory redisConnectionFactory() {
 		RedisStandaloneConfiguration redisConf = new RedisStandaloneConfiguration();
-		redisConf.setHostName(env.getProperty("spring.redis.host"));
-		redisConf.setPort(Integer.parseInt(env.getProperty("spring.redis.port")));
+		redisConf.setHostName(redisHostname);
+		redisConf.setPort(Integer.parseInt(redisPort));
+//		redisConf.setPassword(env.getProperty("spring.redis.password"));
 		return new LettuceConnectionFactory(redisConf);
 	}
 
