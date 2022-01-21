@@ -36,7 +36,7 @@ public class DataCatalogServiceImpl implements DataCatalogService {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	@Cacheable(value = "datacatalogentryvalue")
+	@Cacheable("datacatalogentryvalue")
 	public Document getDataFromDataCatalog() {
 
 		Document doc = new Document<>();
