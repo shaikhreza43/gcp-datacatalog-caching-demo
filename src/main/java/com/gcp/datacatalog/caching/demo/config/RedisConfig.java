@@ -16,6 +16,13 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Shaikh Ahmed Reza
@@ -44,15 +51,28 @@ public class RedisConfig {
 		return new LettuceConnectionFactory(redisConf);
 	}
 
+//	@Bean
+//	public RedisCacheConfiguration cacheConfiguration(ObjectMapper objectMapper) {
+//		RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+//				.serializeKeysWith(SerializationPair.fromSerializer(new StringRedisSerializer()))
+//				.serializeValuesWith(
+//						SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)))
+//				.entryTtl(Duration.ofSeconds(600)).disableCachingNullValues();
+//		return cacheConfig;
+//	}
+
 	@Bean
 	public RedisCacheConfiguration cacheConfiguration() {
 		RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+				.serializeKeysWith(SerializationPair.fromSerializer(new StringRedisSerializer()))
+				.serializeValuesWith(SerializationPair.fromSerializer(new JdkSerializationRedisSerializer(getClass().getClassLoader())))
 				.entryTtl(Duration.ofSeconds(600)).disableCachingNullValues();
 		return cacheConfig;
 	}
 
 	@Bean
 	public RedisCacheManager cacheManager() {
+		ObjectMapper om = new ObjectMapper();
 		RedisCacheManager rcm = RedisCacheManager.builder(redisConnectionFactory()).cacheDefaults(cacheConfiguration())
 				.transactionAware().build();
 		return rcm;

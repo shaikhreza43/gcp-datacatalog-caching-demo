@@ -6,9 +6,19 @@ package com.gcp.datacatalog.caching.demo.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.connection.DataType;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.support.collections.RedisList;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +46,7 @@ public class DataCatalogServiceImpl implements DataCatalogService {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	@Cacheable("datacatalogentryvalue")
+	@Cacheable(cacheNames = "datacatalogentry")
 	public Document getDataFromDataCatalog() {
 
 		Document doc = new Document<>();
@@ -63,6 +73,10 @@ public class DataCatalogServiceImpl implements DataCatalogService {
 
 //			EntryGroupName entryGroupName = EntryGroupName.of(projectId, location, entryGroupId);
 //			EntryGroup entryGroup = getEntryGroup(entryGroupName);
+
+//			Map<String, List<String>> map = new HashMap<>();
+//
+//			map.put("datacatalogKey", listOfEntries);
 
 			doc.setData(listOfEntries);
 			doc.setMessage("Entry Group retrieved successfully");

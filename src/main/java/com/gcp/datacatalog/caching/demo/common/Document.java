@@ -3,11 +3,13 @@
  */
 package com.gcp.datacatalog.caching.demo.common;
 
+import java.io.Serializable;
+
 /**
  * @author Shaikh Ahmed Reza
  *
  */
-public class Document<T> {
+public class Document<T> implements Serializable {
 
 	private T data;
 	private String message;
